@@ -6,4 +6,4 @@ Later, we will publish soltutions for the homeworks here.
 
 
 
-Find instructions for the exercises here: mt2-erlangen.github.io 
+Find instructions for the exercises here: https://mt2-erlangen.github.io/
