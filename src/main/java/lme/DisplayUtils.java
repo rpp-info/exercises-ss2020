@@ -16,8 +16,8 @@ public class DisplayUtils {
     }
 
     public static void showArray(float[] yValues, Plot plot, double origin, double spacing) {
-        var yValuesDouble = new double[yValues.length];
-        var xValues = new double[yValues.length];
+        double[] yValuesDouble = new double[yValues.length];
+        double[] xValues = new double[yValues.length];
 
         for (int i = 0; i < xValues.length; i++) {
             xValues[i] = origin + i * spacing;
@@ -29,8 +29,8 @@ public class DisplayUtils {
     }
 
     public static void showArraysBars(int[] yValues, Plot plot, double minValue, double binSize) {
-        var yValuesDouble = new double[yValues.length];
-        var xValues = new double[yValues.length];
+        double[] yValuesDouble = new double[yValues.length];
+        double[] xValues = new double[yValues.length];
 
         for (int i = 0; i < xValues.length; i++) {
             xValues[i] = minValue + i * binSize + 0.5 * binSize;
@@ -42,8 +42,8 @@ public class DisplayUtils {
     }
 
     public static void showArrayBars(float[] yValues, Plot plot, double minValue, double binSize) {
-        var yValuesDouble = new double[yValues.length];
-        var xValues = new double[yValues.length];
+        double[] yValuesDouble = new double[yValues.length];
+        double[] xValues = new double[yValues.length];
 
         for (int i = 0; i < xValues.length; i++) {
             xValues[i] = minValue + i * binSize + 0.5 * binSize;

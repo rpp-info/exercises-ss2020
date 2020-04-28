@@ -17,8 +17,8 @@ public class SignalTests {
     @Test
     void testAtIndex() {
 
-        var kernelArray = new float[] { 0, 1, 2, 0.5f, 0.2f };
-        var testSignal = new Signal(kernelArray, "Input");
+        float[] kernelArray = new float[] { 0, 1, 2, 0.5f, 0.2f };
+        Signal testSignal = new Signal(kernelArray, "Input");
 
         IntStream.range(0, kernelArray.length)
                 .forEach(i -> Assertions.assertEquals(kernelArray[i], testSignal.atIndex(i)));

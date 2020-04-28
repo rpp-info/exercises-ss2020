@@ -19,21 +19,21 @@ public class LinearFilterTests {
     void testConvolution() {
         (new ij.ImageJ()).exitWhenQuitting(true);
 
-        var kernelArray = new float[]{0, 1, 2, 0.5f, 0.2f};
+        float[] kernelArray = new float[]{0, 1, 2, 0.5f, 0.2f};
 //        var kernelArray = new float[]{0, 0, 2, 0, 1};
 
 
-        var input = new float[10];
+        float[] input = new float[10];
 
-        var random = new Random();
+        Random random = new Random();
         IntStream.range(0, input.length).forEach(i -> input[i] = random.nextFloat());
 
 
-        var inputSignal = new Signal(input, "Input");
-        var filter = new LinearFilter(kernelArray, "Filter");
+        Signal inputSignal = new Signal(input, "Input");
+        LinearFilter filter = new LinearFilter(kernelArray, "Filter");
         var outputSignal = filter.apply(inputSignal);
 
-        var referenceSignal = lme.Algorithms.convolution1d(inputSignal, filter);
+        mt.Signal referenceSignal = lme.Algorithms.convolution1d(inputSignal, filter);
 
         inputSignal.show();
         referenceSignal.show();
@@ -47,15 +47,15 @@ public class LinearFilterTests {
     void testExampleFromExercise() {
         (new ij.ImageJ()).exitWhenQuitting(true);
 
-        var kernelArray = new float[]{1, 2, 3};
+        float[] kernelArray = new float[]{1, 2, 3};
 
-        var input = new float[]{1, 0, 0, 2, 3, 0, 0, 0, 4};
+        float[] input = new float[]{1, 0, 0, 2, 3, 0, 0, 0, 4};
 
-        var inputSignal = new Signal(input, "Input");
-        var filter = new LinearFilter(kernelArray, "Filter");
-        var outputSignal = filter.apply(inputSignal);
+        Signal inputSignal = new Signal(input, "Input");
+        LinearFilter filter = new LinearFilter(kernelArray, "Filter");
+        Signal outputSignal = filter.apply(inputSignal);
 
-        var referenceSignal = lme.Algorithms.convolution1d(inputSignal, filter);
+        mt.Signal referenceSignal = lme.Algorithms.convolution1d(inputSignal, filter);
 
         for(int i = 0; i < input.length; i++) {
             System.out.print("Your result " + outputSignal.atIndex(i));
@@ -69,7 +69,7 @@ public class LinearFilterTests {
         for (int i = 1; i < 10; ++i) {
             var filterArray = new float[i * 2 + 1];
             IntStream.range(0, filterArray.length).forEach(j -> filterArray[j] = j);
-            var testFilter = new LinearFilter(filterArray, "Input");
+            LinearFilter testFilter = new LinearFilter(filterArray, "Input");
             Assertions.assertEquals(testFilter.minIndex(), -i);
             Assertions.assertEquals(testFilter.size(), i * 2 + 1);
             Assertions.assertEquals(testFilter.maxIndex(), i);
