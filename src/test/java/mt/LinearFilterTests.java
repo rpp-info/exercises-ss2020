@@ -59,7 +59,7 @@ public class LinearFilterTests {
 
         for(int i = 0; i < input.length; i++) {
             System.out.print("Your result " + outputSignal.atIndex(i));
-            System.out.println(", Reference result " + outputSignal.atIndex(i));
+            System.out.println(", Reference result " + referenceSignal.atIndex(i));
         }
         Assertions.assertArrayEquals(outputSignal.buffer(), referenceSignal.buffer(), 0.01f);
     }
