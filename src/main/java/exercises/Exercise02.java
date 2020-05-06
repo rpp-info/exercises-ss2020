@@ -6,6 +6,7 @@ package exercises;
 //// import this once you need it
 // import lme.HeartSignalPeaks;
 import us.hebi.matlab.mat.format.Mat5;
+import us.hebi.matlab.mat.types.Matrix;
 
 import java.io.IOException;
 import ij.gui.Plot;
