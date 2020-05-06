@@ -10,6 +10,7 @@ import us.hebi.matlab.mat.format.Mat5;
 import java.io.IOException;
 import ij.gui.Plot;
 import java.io.File;
+import java.util.ArrayList;
 
 public class Exercise02 {
 
