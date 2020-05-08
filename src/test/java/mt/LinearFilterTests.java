@@ -31,7 +31,7 @@ public class LinearFilterTests {
 
         Signal inputSignal = new Signal(input, "Input");
         LinearFilter filter = new LinearFilter(kernelArray, "Filter");
-        var outputSignal = filter.apply(inputSignal);
+        Signal outputSignal = filter.apply(inputSignal);
 
         mt.Signal referenceSignal = lme.Algorithms.convolution1d(inputSignal, filter);
 
@@ -67,7 +67,7 @@ public class LinearFilterTests {
     @Test
     void testAtIndexFilter() {
         for (int i = 1; i < 10; ++i) {
-            var filterArray = new float[i * 2 + 1];
+            float[] filterArray = new float[i * 2 + 1];
             IntStream.range(0, filterArray.length).forEach(j -> filterArray[j] = j);
             LinearFilter testFilter = new LinearFilter(filterArray, "Input");
             Assertions.assertEquals(testFilter.minIndex(), -i);
