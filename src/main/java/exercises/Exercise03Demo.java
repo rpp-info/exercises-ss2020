@@ -2,6 +2,7 @@ package exercises;
 
 import ij.ImagePlus;
 import ij.process.FloatProcessor;
+import ij.process.ImageConverter;
 import mt.GaussFilter2d;
 import mt.Image;
 import mt.LinearImageFilter;
@@ -113,7 +114,7 @@ public class Exercise03Demo implements Command, Previewable {
     }
 
     protected void initImagePlus() {
-        var converter = new ij.process.ImageConverter(imp);
+        ImageConverter converter = new ij.process.ImageConverter(imp);
         converter.convertToGray32();
         originalProcessor = (FloatProcessor) imp.getProcessor();
         imp.setProcessor(new FloatProcessor(originalProcessor.getWidth(), originalProcessor.getHeight()));
