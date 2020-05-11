@@ -70,11 +70,11 @@ public class LinearImageFilterTests {
     @Test
     void testMinMaxIndex() {
         LinearImageFilter filter = new LinearImageFilter(3, 9, "Foo");
-        Assertions.assertEquals(filter.minIndexX(), -1);
-        Assertions.assertEquals(filter.minIndexY(), -4);
+        Assertions.assertEquals(-1, filter.minIndexX());
+        Assertions.assertEquals(-4, filter.minIndexY());
 
-        Assertions.assertEquals(filter.maxIndexX(), +1);
-        Assertions.assertEquals(filter.maxIndexY(), +4);
+        Assertions.assertEquals(+1, filter.maxIndexX());
+        Assertions.assertEquals(+4, filter.maxIndexY());
     }
 
     @Test
