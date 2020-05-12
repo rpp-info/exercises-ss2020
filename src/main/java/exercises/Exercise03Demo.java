@@ -76,7 +76,7 @@ public class Exercise03Demo implements Command, Previewable {
 
         Image output = lme.DisplayUtils.plusToImage(imp, "?");
 
-        if (doGaussFiltering) {
+        if (doGaussFiltering || highPass) {
             LinearImageFilter filter = new GaussFilter2d(filterSize, sigma);
             filter.apply(filterInput, output);
             if (highPass) {
