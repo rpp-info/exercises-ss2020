@@ -16,7 +16,7 @@ import ij.ImagePlus;
 import java.io.File;
 
 import mt.Image;
-import mt.Volume;
+//import mt.Volume;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -217,7 +217,7 @@ public class DisplayUtils {
                     .forEach(i -> randomColors.add(ThreadLocalRandom.current().nextInt(0, Integer.MAX_VALUE)));
         }
 
-        // I hate you Java 🤦
+        // I hate you Java
         IterableInterval<ARGBType> argb = Converters.convert((IterableInterval<FloatType>) originalImg,
                 new RealARGBConverter<>(0, original.max()), new ARGBType());
         net.imglib2.algorithm.labeling.ConnectedComponents.labelAllConnectedComponents(segmentedBytes, labeling,
