@@ -91,6 +91,48 @@ public class Signal {
 		this.name = name;
 	}
 
+		public float sum() {
+		float rtn = 0;
+		for (float f : buffer) {
+			rtn += f;
+		}
+		return rtn;
+	}
+
+	public float mean() {
+		return sum() / size();
+	}
+
+	public float variance() {
+		float rtn = 0.f;
+		for (float f : buffer) {
+			rtn += f * f;
+		}
+		rtn /= size();
+		var mean = mean();
+		rtn -= mean * mean;
+		return rtn;
+	}
+
+	public float stdDev() {
+		return (float) Math.sqrt(variance());
+	}
+		public float min() {
+		var min = Float.POSITIVE_INFINITY;
+		for (float f : buffer) {
+			min = Math.min(f, min);
+		}
+		return min;
+	}
+
+	public float max() {
+		var max = Float.NEGATIVE_INFINITY;
+		for (float f : buffer) {
+			max = Math.max(f, max);
+		}
+		return max;
+	}
+
 	//public void fill(Function<Integer, Float> fillFunction) {
 		//IntStream.range(minIndex(), maxIndex()).forEach(i -> setAtIndex(i, fillFunction.apply(i)));
 	//}
