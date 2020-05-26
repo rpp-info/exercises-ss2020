@@ -12,6 +12,7 @@ import ij.gui.Plot;
 import lme.DisplayUtils;
 
 import java.util.Random;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 
 public class Signal {
@@ -19,6 +20,7 @@ public class Signal {
 	protected float[] buffer;
 	protected String name;
 	protected int minIndex = 0;
+	protected float spacing = 1.f;
 
 	public Signal(int length) {
 		buffer = new float[length];
@@ -159,5 +161,13 @@ public class Signal {
 
 	public void fill(Function<Integer, Float> fillFunction) {
 		IntStream.range(minIndex(), maxIndex()).forEach(i -> setAtIndex(i, fillFunction.apply(i)));
+	}
+
+	public void setSpacing(float spacing) {
+	    this.spacing = spacing;
+	}
+
+	public float spacing() {
+	    return spacing;
 	}
 }

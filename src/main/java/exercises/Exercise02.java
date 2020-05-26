@@ -25,7 +25,7 @@ public class Exercise02 {
 		boolean inPeakRegion = false;
 
 		for (int i = 0; i < signal.buffer().length; ++i) {
-			var currentValue = signal.buffer()[i];
+			float currentValue = signal.buffer()[i];
 			if (currentValue > threshold) {
 				inPeakRegion = true;
 				if (currentValue > currentMax) {
@@ -65,12 +65,12 @@ public class Exercise02 {
 		(new ij.ImageJ()).exitWhenQuitting(true);
 
 		System.out.println("Started with the following arguments");
-		for (var arg : args) {
+		for (String arg : args) {
 			System.out.println(arg);
 		}
 
 		if (args.length == 1) {
-			var file = new File(args[0]);
+			File file = new File(args[0]);
 			if (file.isFile()) {
 				Matrix mat = Mat5.readFromFile(file).getMatrix(0);
 				Signal heartSignal = new mt.Signal(mat.getNumElements(), "Heart Signal");
