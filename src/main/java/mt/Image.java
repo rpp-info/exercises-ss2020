@@ -99,12 +99,12 @@ public class Image extends Signal {
     }
 
     public Image minus(Signal other) {
-        var signal = super.minus(other);
+        Signal signal = super.minus(other);
         return new Image(width(), height(), signal.name(), signal.buffer());
     }
 
     public Image plus(Signal other) {
-        var signal = super.plus(other);
+        Signal signal = super.plus(other);
         return new Image(width(), height(), signal.name(), signal.buffer());
     }
 
@@ -118,14 +118,14 @@ public class Image extends Signal {
     }
 
     public Image binaryOperation(Image other, BinaryOperator<Float> operation, String resultName) {
-        var output = new Image(width(), height(), resultName);
+        Image output = new Image(width(), height(), resultName);
         IntStream.range(0, size())
                 .forEach(i -> output.buffer[i] = operation.apply(this.buffer()[i], other.buffer()[i]));
         return output;
     }
 
     public Image unaryOperation(Function<Float, Float> operation, String resultName) {
-        var output = new Image(width(), height(), resultName);
+        Image output = new Image(width(), height(), resultName);
         IntStream.range(0, size()).forEach(i -> output.buffer[i] = operation.apply(this.buffer()[i]));
         return output;
     }
