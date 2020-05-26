@@ -112,7 +112,7 @@ public class Signal {
             rtn += f * f;
         }
         rtn /= size();
-        var mean = mean();
+        float mean = mean();
         rtn -= mean * mean;
         return rtn;
     }
@@ -122,7 +122,7 @@ public class Signal {
     }
 
     public float min() {
-        var min = Float.POSITIVE_INFINITY;
+        float min = Float.POSITIVE_INFINITY;
         for (float f : buffer) {
             min = Math.min(f, min);
         }
@@ -130,7 +130,7 @@ public class Signal {
     }
 
     public float max() {
-        var max = Float.NEGATIVE_INFINITY;
+        float max = Float.NEGATIVE_INFINITY;
         for (float f : buffer) {
             max = Math.max(f, max);
         }
@@ -157,6 +157,13 @@ public class Signal {
             result.buffer()[i] = buffer()[i] + other.buffer()[i];
         }
         return result;
+	public void setSpacing(float spacing) {
+		this.spacing = spacing;
+	}
+
+	public float spacing() {
+		return spacing;
+	}
     }
 
     public void fill(Function<Integer, Float> fillFunction) {
