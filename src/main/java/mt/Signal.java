@@ -12,6 +12,7 @@ import ij.gui.Plot;
 import lme.DisplayUtils;
 
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class Signal {
 
@@ -132,8 +133,31 @@ public class Signal {
 		}
 		return max;
 	}
+    
+    public Signal minus(Signal other) {
+		if (size() != other.size()) {
+			throw new RuntimeException("Java sucks: both Signals don't have the same size!");
+		}
+		Signal result = new Signal(this.size(), "(" + name() + ") minus (" + other.name() + ")");
+		for (int i = 0; i < result.size(); i++) {
+			result.buffer()[i] = buffer()[i] - other.buffer()[i];
+		}
+		return result;
+	}
 
-	//public void fill(Function<Integer, Float> fillFunction) {
-		//IntStream.range(minIndex(), maxIndex()).forEach(i -> setAtIndex(i, fillFunction.apply(i)));
-	//}
+	public Signal plus(Signal other) {
+		if (size() != other.size()) {
+			throw new RuntimeException("Java sucks: both Signals don't have the same size!");
+		}
+		Signal result = new Signal(this.size(), "(" + name() + ") plus (" + other.name() + ")");
+		for (int i = 0; i < result.size(); i++) {
+			result.buffer()[i] = buffer()[i] + other.buffer()[i];
+		}
+		return result;
+	}
+
+
+	public void fill(Function<Integer, Float> fillFunction) {
+		IntStream.range(minIndex(), maxIndex()).forEach(i -> setAtIndex(i, fillFunction.apply(i)));
+	}
 }
