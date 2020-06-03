@@ -117,6 +117,45 @@ public class Image extends Signal {
         return origin;
     }
 
+    public void centerOrigin() {
+        origin[0] = -width() * spacing * 0.5f;
+        origin[1] = -height() * spacing * 0.5f;
+    }
+
+    public float physicalX(int x) {
+        return x * spacing() + origin()[0];
+    }
+
+    public float physicalY(int y) {
+        return y * spacing() + origin()[1];
+    }
+
+    // [interpolation: 4/4]
+    private static float lerp(float a, float b, float f) {
+        return a + f * (b - a);
+    }
+
+    public float interpolatedAt(float x, float y) {
+        /// 1 P
+        x -= origin[0];
+        y -= origin[1];
+        x /= spacing;
+        y /= spacing;
+
+        /// 1 P
+        int xFloor = (int) Math.floor(x);
+        int yFloor = (int) Math.floor(y);
+        int xCeil = (int) Math.ceil(x);
+        int yCeil = (int) Math.ceil(y);
+
+        /// 1 P
+        float x1 = lerp(atIndex(xFloor, yFloor), atIndex(xCeil, yFloor), x - xFloor);
+        float x2 = lerp(atIndex(xFloor, yCeil), atIndex(xCeil, yCeil), x - xFloor);
+
+        /// 1 P
+        return lerp(x1, x2, y - yFloor);
+    }
+
     public Image binaryOperation(Image other, BinaryOperator<Float> operation, String resultName) {
         Image output = new Image(width(), height(), resultName);
         IntStream.range(0, size())
@@ -130,8 +169,4 @@ public class Image extends Signal {
         return output;
     }
 
-    public void centerOrigin() {
-        origin[0] = -width() * 0.5f;
-        origin[1] = -height() * 0.5f;
-    }
 }
