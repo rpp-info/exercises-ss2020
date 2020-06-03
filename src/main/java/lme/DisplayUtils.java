@@ -7,39 +7,39 @@
 
 package lme;
 
+//import clearvolume.renderer.factory.ClearVolumeRendererFactory;
+//import clearvolume.transferf.TransferFunctions;
+import ij.ImagePlus;
 import ij.ImageStack;
 import ij.gui.Plot;
 import ij.measure.Calibration;
-import ij.process.*;
-import ij.ImagePlus;
-
-import java.io.File;
-
+import ij.process.ColorProcessor;
+import ij.process.FloatProcessor;
+import ij.process.ImageConverter;
 import mt.Image;
-//import mt.Volume;
+import mt.Volume;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.algorithm.labeling.ConnectedComponents;
+import net.imglib2.converter.Converters;
+import net.imglib2.converter.RealARGBConverter;
+import net.imglib2.converter.RealTypeConverters;
 import net.imglib2.img.array.ArrayCursor;
-import net.imglib2.img.basictypeaccess.array.IntArray;
-import net.imglib2.type.numeric.integer.IntType;
-import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
+import net.imglib2.img.basictypeaccess.array.IntArray;
+import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.real.FloatType;
 
-import net.imglib2.algorithm.labeling.ConnectedComponents;
-import net.imglib2.converter.*;
-
-//import java.nio.ByteBuffer;
-//import java.nio.FloatBuffer;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +47,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
+
+//import java.nio.ByteBuffer;
+//import java.nio.FloatBuffer;
 
 //import coremem.enums.NativeTypeEnum;
 
@@ -175,24 +178,24 @@ public class DisplayUtils {
         ij.IJ.save(plus, path);
     }
 
-//    public static mt.Volume plusToVolume(ImagePlus plus, String title) {
-//        ImageConverter converter = new ImageConverter(plus);
-//        converter.convertToGray32();
-//        Volume volume = new mt.Volume(plus.getStack().getWidth(), plus.getStack().getHeight(), plus.getStackSize(), title);
-//        ImageStack stack = plus.getStack();
-//
-//        IntStream.range(0, plus.getStackSize()).forEach(z -> {
-//            FloatProcessor processor = (FloatProcessor) stack.getProcessor(1 + z);
-//            volume.setSlice(z, floatProcessorToImage(processor, title));
-//        });
-//        return volume;
-//    }
-//
-//
-//    public static mt.Volume openVolume(String path) {
-//        ImagePlus plus = ij.IJ.openImage(path);
-//        return plusToVolume(plus, (new File(path)).getName());
-//    }
+    public static mt.Volume plusToVolume(ImagePlus plus, String title) {
+        ImageConverter converter = new ImageConverter(plus);
+        converter.convertToGray32();
+        Volume volume = new mt.Volume(plus.getStack().getWidth(), plus.getStack().getHeight(), plus.getStackSize(), title);
+        ImageStack stack = plus.getStack();
+
+        IntStream.range(0, plus.getStackSize()).forEach(z -> {
+            FloatProcessor processor = (FloatProcessor) stack.getProcessor(1 + z);
+            volume.setSlice(z, floatProcessorToImage(processor, title));
+        });
+        return volume;
+    }
+
+
+    public static mt.Volume openVolume(String path) {
+        ImagePlus plus = ij.IJ.openImage(path);
+        return plusToVolume(plus, (new File(path)).getName());
+    }
 
 
     static int mixRGB(int a, int b, float alpha) {
@@ -217,7 +220,6 @@ public class DisplayUtils {
                     .forEach(i -> randomColors.add(ThreadLocalRandom.current().nextInt(0, Integer.MAX_VALUE)));
         }
 
-        // I hate you Java
         IterableInterval<ARGBType> argb = Converters.convert((IterableInterval<FloatType>) originalImg,
                 new RealARGBConverter<>(0, original.max()), new ARGBType());
         net.imglib2.algorithm.labeling.ConnectedComponents.labelAllConnectedComponents(segmentedBytes, labeling,
@@ -240,20 +242,77 @@ public class DisplayUtils {
         plus.setProcessor(processor);
         plus.show();
     }
+    public static void showSegmentedCells(mt.Image original, mt.Image segmented, boolean differentColors) {
+        ArrayImg<FloatType, FloatArray> originalImg = toArrayImg(original);
+        ArrayImg<FloatType, FloatArray> segmentedImg = toArrayImg(segmented);
+        RandomAccessibleInterval<UnsignedByteType> segmentedBytes = RealTypeConverters.convert(segmentedImg, new UnsignedByteType());
+        ArrayImg<IntType, IntArray> labeling = ArrayImgs.ints(original.width(), original.height());
 
-//    public static void showVolume(mt.Volume volume) {
-//        ImagePlus plus = new ImagePlus();
-////        if (ij.WindowManager.getImage(volume.name()) != null) {
-////            plus = ij.WindowManager.getImage(volume.name());
-////        }
-//        ImageStack stack = new ij.ImageStack();
-//        for (int z = 0; z < volume.depth(); ++z) {
-//            var processor = new FloatProcessor(volume.width(), volume.height(), volume.getSlice(z).buffer());
-//            stack.addSlice(processor);
+        if (randomColors == null) {
+            randomColors = new ArrayList<Integer>(10000);
+            IntStream.range(0, 10000)
+                    .forEach(i -> randomColors.add(ThreadLocalRandom.current().nextInt(0, Integer.MAX_VALUE)));
+        }
+
+        IterableInterval<ARGBType> argb = Converters.convert((IterableInterval<FloatType>) originalImg,
+                new RealARGBConverter<>(0, original.max()), new ARGBType());
+        net.imglib2.algorithm.labeling.ConnectedComponents.labelAllConnectedComponents(segmentedBytes, labeling,
+                ConnectedComponents.StructuringElement.EIGHT_CONNECTED);
+
+        ColorProcessor processor = new ij.process.ColorProcessor(original.width(), original.height());
+
+        ArrayCursor<IntType> cursor = labeling.cursor();
+        Cursor<ARGBType> argbCursor = argb.cursor();
+        while (cursor.hasNext()) {
+            cursor.fwd();
+            argbCursor.fwd();
+            int value = cursor.get().get();
+            int x = cursor.getIntPosition(0);
+            int y = cursor.getIntPosition(1);
+            if (segmented.atIndex(x,y) > 0.5f) {
+                if (differentColors) {
+                    processor.set(x, y, mixRGB(randomColors.get(value % randomColors.size()), argbCursor.get().get(), 0.3f));
+                } else {
+                    processor.set(x, y, mixRGB(0xCC0000, argbCursor.get().get(), 0.3f));
+                }
+            } else {
+                processor.set(x, y, argbCursor.get().get());
+            }
+        }
+
+        ImagePlus plus = new ImagePlus();
+        if(differentColors) {
+            plus.setTitle("Segmentation on Image");
+        } else {
+            plus.setTitle("Segmentations on Image");
+        }
+        plus.setProcessor(processor);
+        plus.show();
+    }
+
+    public static void showVolume(mt.Volume volume) {
+        ImagePlus plus = new ImagePlus();
+//        if (ij.WindowManager.getImage(volume.name()) != null) {
+//            plus = ij.WindowManager.getImage(volume.name());
 //        }
-//        plus.setStack(volume.name(), stack);
-//        plus.show();
-//        ij.IJ.run("Tile");
-//    }
+        ImageStack stack = new ij.ImageStack();
+        for (int z = 0; z < volume.depth(); ++z) {
+            FloatProcessor processor = new FloatProcessor(volume.width(), volume.height(), volume.getSlice(z).buffer());
+            stack.addSlice(processor);
+        }
+        plus.setStack(volume.name(), stack);
+        Calibration calibration = new Calibration();
+        calibration.setUnit("mm");
+        calibration.xOrigin = volume.origin()[0];
+        calibration.yOrigin = volume.origin()[1];
+        calibration.zOrigin = volume.origin()[2];
+        calibration.pixelHeight = volume.spacing();
+        calibration.pixelWidth = volume.spacing();
+        calibration.pixelDepth = volume.spacing();
+
+        plus.setCalibration(calibration);
+        plus.show();
+        ij.IJ.run("Tile");
+    }
 }
 
