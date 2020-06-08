@@ -76,7 +76,7 @@ public class Image extends Signal {
 
     public void fill(InitFunction2d function) {
         for (int y = minIndexY; y < minIndexY + height(); ++y) {
-            for (int x = minIndexY; x < minIndexX + width(); ++x) {
+            for (int x = minIndexX; x < minIndexX + width(); ++x) {
                 setAtIndex(x, y, function.init(x, y));
             }
         }
