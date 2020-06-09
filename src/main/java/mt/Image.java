@@ -129,6 +129,15 @@ public class Image extends Signal {
     public float physicalY(int y) {
         return y * spacing() + origin()[1];
     }
+    
+    public static float meanSquaredError(Image a, Image b) {
+        return a.binaryOperation(b, (u, v) -> (u-v) * (u-v) ,"MSE").mean();
+    }
+
+    public static float psnr(Image a, Image b, float maxPossibleValue) {
+        return (float) (20 * Math.log10(maxPossibleValue) - 10 * Math.log10(meanSquaredError(a,b)));
+    }
+
 
     // [interpolation: 4/4]
     private static float lerp(float a, float b, float f) {
