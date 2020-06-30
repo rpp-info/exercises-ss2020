@@ -40,7 +40,7 @@ public class Exercise06 {
         edgesX.show();
         edgesY.show();
 
-        /// 1 P
+        /// 2 P
         var gradientMag = edgesX.binaryOperation(edgesY, (x, y) -> (float) Math.sqrt(x * x + y * y), "Gradient Magnitude");
         gradientMag.show();
 
